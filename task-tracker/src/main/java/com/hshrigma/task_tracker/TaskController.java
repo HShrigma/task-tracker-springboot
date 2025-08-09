@@ -9,7 +9,7 @@ import com.hshrigma.task_tracker.service.TaskService;
 import java.util.List;
 
 import org.springframework.web.bind.annotation.GetMapping;
-
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/tasks")
@@ -25,5 +25,8 @@ public class TaskController {
     public List<BaseTask> getTasks() {
         return taskService.getMockTasks();
     }
-    
+    @GetMapping("/{index}")
+    public BaseTask getTask(@PathVariable int index) {
+        return taskService.getTaskByIndex(index);
+    }
 }

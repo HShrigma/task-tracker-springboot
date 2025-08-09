@@ -39,7 +39,7 @@ public class RunnableTask implements BaseTask {
         message.append("Task ID: ").append(getID())
                 .append("\n\tName: ").append(getName())
                 .append("\n\tDescription: ").append(getDescription())
-                .append("Task is running...");
-        System.out.println();
+                .append("\n is running...");
+        System.out.println(message.toString());
     }
 }
