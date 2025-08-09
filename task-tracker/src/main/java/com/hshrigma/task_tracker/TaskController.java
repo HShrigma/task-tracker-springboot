@@ -36,7 +36,6 @@ public class TaskController {
              if (res.isPresent()) {
             return ResponseEntity.ok(res.get());
         } else {
-            // Return 404 Not Found with a meaningful message
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
                     .body(Map.of(
