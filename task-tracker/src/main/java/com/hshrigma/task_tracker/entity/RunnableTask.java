@@ -11,6 +11,7 @@ public class RunnableTask implements BaseTask{
         this.name = name;
         this.description = description;
         status = false;
+        Run();
     }
     
     @Override
@@ -33,6 +34,7 @@ public class RunnableTask implements BaseTask{
         return description;
     }
 
-    
-    
+    public void Run(){
+        System.out.println("Task is running...");
+    }
 }
