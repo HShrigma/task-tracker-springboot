@@ -8,6 +8,6 @@ import com.hshrigma.task_tracker.entity.BaseTask;
 
 @Repository
 public interface TaskRepository {
-     public BaseTask getTask(int index);
+     public BaseTask getTaskByID(long id);
      public List<BaseTask> findAll();
 }

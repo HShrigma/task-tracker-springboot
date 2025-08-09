@@ -26,7 +26,15 @@ public class MockTaskRepository implements TaskRepository {
     }
 
     @Override
-    public BaseTask getTask(int index) {
-        return tasks.get(index);
+    public  BaseTask getTaskByID(long id) {
+       BaseTask res = null;
+       for (BaseTask baseTask : tasks) {
+        if(baseTask.getID() == id){
+            res = baseTask;
+            break;
+        }
+       } 
+       return res;
     }
+
 }

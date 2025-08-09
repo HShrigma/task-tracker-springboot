@@ -17,7 +17,8 @@ public class TaskService {
     public List<BaseTask> getMockTasks() {
         return tasksRepo.findAll();
     }
-    public BaseTask getTaskByIndex(int index){
-        return tasksRepo.getTask(index);
+    
+    public BaseTask getTaskByID(int id){
+        return tasksRepo.getTaskByID(id);
     }
 }
