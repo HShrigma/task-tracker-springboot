@@ -1,9 +1,9 @@
 package com.hshrigma.task_tracker.entity;
 
 public interface BaseTask {
-  public Boolean GetStatus();
-  public String  GetName();
-  public String  GetDescription();
+  public Boolean getCompleted();
+  public String  getName();
+  public String  getDescription();
 
-  public long GetID();
+  public long getID();
 }

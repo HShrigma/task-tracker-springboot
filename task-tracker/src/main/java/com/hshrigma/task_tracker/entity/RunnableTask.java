@@ -1,40 +1,45 @@
 package com.hshrigma.task_tracker.entity;
 
-public class RunnableTask implements BaseTask{
+public class RunnableTask implements BaseTask {
     long id;
     String name;
     String description;
-    Boolean status;
+    Boolean completed;
 
-    public RunnableTask (long id, String name, String description){
+    public RunnableTask(long id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        status = false;
-        Run();
-    }
-    
-    @Override
-    public Boolean GetStatus() {
-        return status;
+        completed = false;
+        run();
     }
 
     @Override
-    public String GetName() {
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    @Override
+    public String getName() {
         return name;
     }
 
     @Override
-    public long GetID() {
+    public long getID() {
         return id;
     }
 
     @Override
-    public String GetDescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void Run(){
-        System.out.println("Task is running...");
+    public void run() {
+        StringBuilder message = new StringBuilder();
+        message.append("Task ID: ").append(getID())
+                .append("\n\tName: ").append(getName())
+                .append("\n\tDescription: ").append(getDescription())
+                .append("Task is running...");
+        System.out.println();
     }
 }

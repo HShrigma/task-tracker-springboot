@@ -25,7 +25,7 @@ public class MainController {
         System.out.println("appName is: " + appName);
         List<BaseTask> tasks = taskService.getMockTasks();
         for( var task : tasks){
-            System.out.println("[INFO] " + task.GetName() + " - " + task.GetDescription());
+            System.out.println("[INFO] " + task.getName() + " - " + task.getDescription());
         }
 
         return "index.html";
