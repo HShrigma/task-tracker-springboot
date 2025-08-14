@@ -20,29 +20,42 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService taskService;
-
+    ResponseEntity<?> get404(String message){
+        return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body(Map.of(
+                            "error", "Task not found",
+                            "message", message,
+                            "status", HttpStatus.NOT_FOUND.value()));
+    }
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
     @GetMapping("")
-    public List<BaseTask> getTasks() {
-        return taskService.getMockTasks();
+    public ResponseEntity<?> getAllTasks() {
+        Optional<Map<String,List<BaseTask>>> res = Optional.ofNullable(taskService.getMockTasks());
+        if(res.isPresent()){
+            return ResponseEntity.ok(res.get());
+        }
+        return get404("No tasks found");
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getTaskByIndex(@PathVariable int id) {
-            Optional<BaseTask> res = Optional.ofNullable(taskService.getTaskByID(id));
+    @GetMapping("/{topic}")
+    public ResponseEntity<?> getTasksForTopic(@PathVariable String topic) {
+        Optional<List<BaseTask>> res = Optional.ofNullable(taskService.getTasksForTopic(topic));
+        if(res.isPresent()){
+            return ResponseEntity.ok(res.get());
+        }
+        return get404(String.format("No tasks found for topic %s", topic));
+    }
+
+    @GetMapping("/{topic}/{id}")
+    public ResponseEntity<?> getTaskByIndex(@PathVariable String topic, @PathVariable int id) {
+            Optional<BaseTask> res = Optional.ofNullable(taskService.getTaskforID(topic,id));
              if (res.isPresent()) {
             return ResponseEntity.ok(res.get());
-        } else {
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body(Map.of(
-                            "error", "Task not found",
-                            "message", String.format("Task with ID %d does not exist", id),
-                            "status", HttpStatus.NOT_FOUND.value()));
+        }
+        return get404(String.format("Task with ID %d does not exist for topic %s", id, topic));
         }
     }
-
-}
