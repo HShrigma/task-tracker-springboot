@@ -27,4 +27,8 @@ public class TaskService {
     public BaseTask getTaskById( long id, String topic) {
         return taskRepo.getTaskById(id, topic);
     }
+
+    public BaseTask createTask(String topic, String name, String description){
+        return taskRepo.createTask(topic, name, description);
+    }
 }

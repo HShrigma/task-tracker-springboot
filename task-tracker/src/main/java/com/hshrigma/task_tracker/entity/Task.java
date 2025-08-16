@@ -26,7 +26,7 @@ public class Task implements BaseTask {
     }
 
     @Override
-    public long getID() {
+    public long getId() {
         return id;
     }
 
@@ -38,5 +38,30 @@ public class Task implements BaseTask {
     @Override
     public String getTopic() {
         return topic;
+    }
+
+    @Override
+    public void setCompleted(Boolean status) {
+        completed = status;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    @Override
+    public void setTopic(String topic) {
+        this.topic = topic;
+    }
+
+    @Override
+    public void setId(long id) {
+        this.id = id;
     }
 }
