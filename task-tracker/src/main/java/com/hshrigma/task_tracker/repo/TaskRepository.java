@@ -14,6 +14,9 @@ public interface TaskRepository {
      public List<BaseTask> getByTopic(String topic);
      public Map <String,List<BaseTask>> getAll();
 
-     // Write
+     // Create
      public BaseTask createTask(String topic, String name, String description);
+
+     // Delete
+     public BaseTask deleteTask(String topic, long id);
 }

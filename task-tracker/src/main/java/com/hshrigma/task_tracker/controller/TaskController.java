@@ -12,7 +12,6 @@ import java.util.Map;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/api/tasks")
 public class TaskController {
@@ -30,9 +29,7 @@ public class TaskController {
     @GetMapping("/{topic}")
     public ResponseEntity<List<BaseTask>> getTasksByTopic(@PathVariable String topic) {
         List<BaseTask> tasks = taskService.getTasksByTopic(topic);
-        return tasks != null ? 
-            ResponseEntity.ok(tasks) :
-            ResponseEntity.notFound().build();
+        return tasks != null ? ResponseEntity.ok(tasks) : ResponseEntity.notFound().build();
     }
 
     @GetMapping("/{topic}/{id}")
@@ -40,19 +37,22 @@ public class TaskController {
             @PathVariable String topic,
             @PathVariable long id) {
         BaseTask task = taskService.getTaskById(id, topic);
-        return task != null ?
-            ResponseEntity.ok(task) :
-            ResponseEntity.notFound().build();
+        return task != null ? ResponseEntity.ok(task) : ResponseEntity.notFound().build();
     }
 
     @PostMapping()
     public ResponseEntity<BaseTask> createTask(@RequestBody TaskCreateRequest req) {
         BaseTask createdTask = taskService.createTask(req.topic, req.name, req.description);
 
-        return createdTask != null ?
-            ResponseEntity.created(URI.create("/api/tasks/" + req.topic + "/" + createdTask.getId()))
-            .body(createdTask) 
-            :ResponseEntity.noContent().build();
+        return createdTask != null
+                ? ResponseEntity.created(URI.create("/api/tasks/" + req.topic + "/" + createdTask.getId()))
+                                .body(createdTask)
+                : ResponseEntity.noContent().build();
     }
-    
+
+    @DeleteMapping("/{topic}/{id}")
+    public ResponseEntity<BaseTask> deleteTask(@PathVariable String topic, @PathVariable long id) {
+        BaseTask toRemove = taskService.deleteTask(topic, id);
+        return toRemove != null ? ResponseEntity.ok(toRemove) : ResponseEntity.notFound().build();
+    }
 }

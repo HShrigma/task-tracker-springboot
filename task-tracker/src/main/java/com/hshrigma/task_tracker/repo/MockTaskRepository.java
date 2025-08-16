@@ -21,15 +21,15 @@ public class MockTaskRepository implements TaskRepository {
                 "Home", "Work");
         List<List<BaseTask>> tempTaskValues = new ArrayList<>();
         tempTaskValues.add(new ArrayList<>(List.of(
-                new Task(id++, topics.get(0),"Clean", "Tidy up space"),
+                new Task(id++, topics.get(0), "Clean", "Tidy up space"),
                 new Task(id++, topics.get(0), "Write Code", "Implement Task Service"),
                 new Task(id++, topics.get(0), "Walk Dog", "Get the dog out on a walk"),
                 new Task(id++, topics.get(0), "Cook", "Make some pasta"),
                 new Task(id++, topics.get(0), "Reward", "Chill out"))));
-       tempTaskValues.add(new ArrayList<>(List.of(
+        tempTaskValues.add(new ArrayList<>(List.of(
                 new Task(id++, topics.get(1), "Commute", "Travel to work"),
-                new Task(id++, topics.get(1),"Work", "Work"),
-                new Task(id++, topics.get(1),"Commute Back", "Travel back home"))));
+                new Task(id++, topics.get(1), "Work", "Work"),
+                new Task(id++, topics.get(1), "Commute Back", "Travel back home"))));
         tasks = new HashMap<>();
 
         for (int i = 0; i < topics.size(); i++) {
@@ -39,10 +39,10 @@ public class MockTaskRepository implements TaskRepository {
 
     @Override
     public BaseTask getTaskById(long id, String topic) {
-        if(getByTopic(topic) != null){
+        if (getByTopic(topic) != null) {
             for (var task : tasks.get(topic)) {
-               if(task.getId() == id) 
-                return task;
+                if (task.getId() == id)
+                    return task;
             }
         }
         return null;
@@ -65,15 +65,32 @@ public class MockTaskRepository implements TaskRepository {
     @Override
     public BaseTask createTask(String topic, String name, String description) {
         BaseTask res = new Task(id++, topic, name, description);
-        if(tasks.containsKey(topic)){
+        if (tasks.containsKey(topic)) {
             tasks.get(topic).add(res);
-        }
-        else{
+        } else {
             List<BaseTask> newTasks = new ArrayList<>();
             newTasks.add(res);
             tasks.put(topic, newTasks);
         }
 
         return res;
+    }
+
+    @Override
+    public BaseTask deleteTask(String topic, long id) {
+        if (!tasks.containsKey(topic))
+            return null;
+
+        BaseTask toRemove = null;
+        for (var task : tasks.get(topic)) {
+            if (task.getId() == id) {
+                toRemove = task;
+                break;
+            }
+        }
+        if (toRemove != null) {
+            tasks.get(topic).remove(toRemove);
+        }
+        return toRemove;
     }
 }
