@@ -20,11 +20,11 @@ public class TaskService {
         return taskRepo.getAll();
     }
 
-    public List<BaseTask> getTasksForTopic(String topic) {
+    public List<BaseTask> getTasksByTopic(String topic) {
         return taskRepo.getByTopic(topic);
     }
 
-    public BaseTask getTaskforID(String topic, long id) {
-        return taskRepo.getTaskByID(id, topic);
+    public BaseTask getTaskById( long id, String topic) {
+        return taskRepo.getTaskById(id, topic);
     }
 }

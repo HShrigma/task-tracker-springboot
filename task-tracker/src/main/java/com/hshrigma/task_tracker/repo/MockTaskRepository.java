@@ -37,7 +37,7 @@ public class MockTaskRepository implements TaskRepository {
     }
 
     @Override
-    public BaseTask getTaskByID(long id, String topic) {
+    public BaseTask getTaskById(long id, String topic) {
         if(getByTopic(topic) != null){
             for (var task : tasks.get(topic)) {
                if(task.getID() == id) 

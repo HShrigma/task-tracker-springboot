@@ -9,7 +9,7 @@ import com.hshrigma.task_tracker.entity.BaseTask;
 
 @Repository
 public interface TaskRepository {
-     public BaseTask getTaskByID(long id, String topic);
+     public BaseTask getTaskById(long id, String topic);
      public List<BaseTask> getByTopic(String topic);
      public Map <String,List<BaseTask>> getAll();
 }
