@@ -109,4 +109,31 @@ public class MockTaskRepository implements TaskRepository {
         }
         return toUpdate;
     }
+
+    @Override
+    public BaseTask updateTaskName(String topic, long id, String name) {
+        BaseTask toUpdate = findTaskForTopicAndId(topic, id);
+        if(toUpdate != null){
+            toUpdate.setName(name);
+        }
+        return toUpdate;
+    }
+
+    @Override
+    public BaseTask updateTaskDescription(String topic, long id, String description) {
+        BaseTask toUpdate = findTaskForTopicAndId(topic, id);
+        if(toUpdate != null){
+            toUpdate.setDescription(description);
+        }
+        return toUpdate;
+    }
+
+    @Override
+    public BaseTask updateTaskCompletion(String topic, long id, Boolean completed) {
+        BaseTask toUpdate = findTaskForTopicAndId(topic, id);
+        if(toUpdate != null){
+            toUpdate.setCompleted(completed);
+        }
+        return toUpdate;
+    }
 }

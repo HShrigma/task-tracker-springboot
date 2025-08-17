@@ -61,8 +61,14 @@ public class TaskController {
     }
 
     @PutMapping("/{topic}/{id}")
-    public ResponseEntity<BaseTask> putMethodName(@PathVariable String topic, @PathVariable long id, @RequestBody TaskUpdateRequest req) {
+    public ResponseEntity<BaseTask> updateTask(@PathVariable String topic, @PathVariable long id, @RequestBody TaskUpdateRequest req) {
         BaseTask toUpdate = taskService.updateTask(topic, id, req.getName(), req.getDescription(), req.getCompleted());
+        return toUpdate != null ? ResponseEntity.ok(toUpdate) : ResponseEntity.notFound().build();
+    }
+
+    @PatchMapping("/{topic}/{id}/{field}/{value}")
+    public ResponseEntity<BaseTask> updateTaskField(@PathVariable String topic, @PathVariable long id, @PathVariable String field, @PathVariable String value){
+        BaseTask toUpdate = taskService.updateTaskField(topic, id, field, value);
         return toUpdate != null ? ResponseEntity.ok(toUpdate) : ResponseEntity.notFound().build();
     }
 }

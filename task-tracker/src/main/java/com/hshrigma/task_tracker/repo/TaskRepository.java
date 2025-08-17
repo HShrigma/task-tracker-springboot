@@ -22,4 +22,7 @@ public interface TaskRepository {
 
      // Update
      public BaseTask updateTask(String topic, long id, String name, String description, Boolean completed);
+     public BaseTask updateTaskName(String topic, long id, String name);
+     public BaseTask updateTaskDescription(String topic, long id, String description);
+     public BaseTask updateTaskCompletion(String topic, long id, Boolean completed);
 }
