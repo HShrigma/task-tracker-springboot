@@ -76,21 +76,37 @@ public class MockTaskRepository implements TaskRepository {
         return res;
     }
 
-    @Override
-    public BaseTask deleteTask(String topic, long id) {
+    // Helper
+    private BaseTask findTaskForTopicAndId(String topic, long id){
         if (!tasks.containsKey(topic))
             return null;
 
-        BaseTask toRemove = null;
+        BaseTask res = null;
         for (var task : tasks.get(topic)) {
             if (task.getId() == id) {
-                toRemove = task;
+                res = task;
                 break;
             }
         }
+        return res;
+    }
+    
+    @Override
+    public BaseTask deleteTask(String topic, long id) {
+        BaseTask toRemove = findTaskForTopicAndId(topic, id);
+
         if (toRemove != null) {
             tasks.get(topic).remove(toRemove);
         }
         return toRemove;
+    }
+
+    @Override
+    public BaseTask updateTask(String topic, long id, String name, String description, Boolean completed){
+        BaseTask toUpdate = findTaskForTopicAndId(topic, id);
+        if(toUpdate != null){
+            toUpdate.resetTask(name, description, completed);
+        }
+        return toUpdate;
     }
 }

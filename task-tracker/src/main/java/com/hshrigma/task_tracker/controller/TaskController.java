@@ -1,6 +1,7 @@
 package com.hshrigma.task_tracker.controller;
 
 import com.hshrigma.task_tracker.dto.TaskCreateRequest;
+import com.hshrigma.task_tracker.dto.TaskUpdateRequest;
 import com.hshrigma.task_tracker.entity.BaseTask;
 import com.hshrigma.task_tracker.service.TaskService;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,9 @@ import java.util.List;
 import java.util.Map;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -42,10 +46,10 @@ public class TaskController {
 
     @PostMapping()
     public ResponseEntity<BaseTask> createTask(@RequestBody TaskCreateRequest req) {
-        BaseTask createdTask = taskService.createTask(req.topic, req.name, req.description);
+        BaseTask createdTask = taskService.createTask(req.getTopic(), req.getName(), req.getDescription());
 
         return createdTask != null
-                ? ResponseEntity.created(URI.create("/api/tasks/" + req.topic + "/" + createdTask.getId()))
+                ? ResponseEntity.created(URI.create("/api/tasks/" + req.getTopic() + "/" + createdTask.getId()))
                                 .body(createdTask)
                 : ResponseEntity.noContent().build();
     }
@@ -54,5 +58,11 @@ public class TaskController {
     public ResponseEntity<BaseTask> deleteTask(@PathVariable String topic, @PathVariable long id) {
         BaseTask toRemove = taskService.deleteTask(topic, id);
         return toRemove != null ? ResponseEntity.ok(toRemove) : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{topic}/{id}")
+    public ResponseEntity<BaseTask> putMethodName(@PathVariable String topic, @PathVariable long id, @RequestBody TaskUpdateRequest req) {
+        BaseTask toUpdate = taskService.updateTask(topic, id, req.getName(), req.getDescription(), req.getCompleted());
+        return toUpdate != null ? ResponseEntity.ok(toUpdate) : ResponseEntity.notFound().build();
     }
 }

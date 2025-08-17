@@ -35,4 +35,8 @@ public class TaskService {
     public BaseTask deleteTask(String topic, long id){
         return taskRepo.deleteTask(topic, id);
     }
+
+    public BaseTask updateTask(String topic, long id, String name, String description, Boolean completed){
+        return taskRepo.updateTask(topic, id, name, description, completed);
+    }
 }

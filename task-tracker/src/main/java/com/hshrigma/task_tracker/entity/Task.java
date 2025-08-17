@@ -64,4 +64,11 @@ public class Task implements BaseTask {
     public void setId(long id) {
         this.id = id;
     }
+    @Override
+    public void resetTask(String name, String description, Boolean completed){
+        this.name = name;
+        this.description = description;
+        this.completed = completed;
+    }
+
 }

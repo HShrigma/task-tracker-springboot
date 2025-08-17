@@ -19,4 +19,7 @@ public interface TaskRepository {
 
      // Delete
      public BaseTask deleteTask(String topic, long id);
+
+     // Update
+     public BaseTask updateTask(String topic, long id, String name, String description, Boolean completed);
 }

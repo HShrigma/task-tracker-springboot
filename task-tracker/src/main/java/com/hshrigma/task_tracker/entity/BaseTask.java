@@ -14,4 +14,5 @@ public interface BaseTask {
   public void setDescription(String description);
   public void setTopic(String topic);
   public void setId(long id);
+  public void resetTask(String name, String description, Boolean completed);
 }
