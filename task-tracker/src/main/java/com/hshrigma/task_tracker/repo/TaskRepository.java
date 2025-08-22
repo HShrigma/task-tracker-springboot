@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.hshrigma.task_tracker.dto.TaskPatchRequest;
 import com.hshrigma.task_tracker.entity.BaseTask;
 
 @Repository
@@ -21,8 +22,6 @@ public interface TaskRepository {
      public BaseTask deleteTask(String topic, long id);
 
      // Update
-     public BaseTask updateTask(String topic, long id, String name, String description, Boolean completed);
-     public BaseTask updateTaskName(String topic, long id, String name);
-     public BaseTask updateTaskDescription(String topic, long id, String description);
-     public BaseTask updateTaskCompletion(String topic, long id, Boolean completed);
+     public BaseTask updateEntireTask(String topic, long id, String name, String description, Boolean completed);
+     public BaseTask updateOptionalTask(String topic, long id, TaskPatchRequest updates);
 }

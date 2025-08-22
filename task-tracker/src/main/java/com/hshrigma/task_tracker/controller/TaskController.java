@@ -1,6 +1,7 @@
 package com.hshrigma.task_tracker.controller;
 
 import com.hshrigma.task_tracker.dto.TaskCreateRequest;
+import com.hshrigma.task_tracker.dto.TaskPatchRequest;
 import com.hshrigma.task_tracker.dto.TaskUpdateRequest;
 import com.hshrigma.task_tracker.entity.BaseTask;
 import com.hshrigma.task_tracker.service.TaskService;
@@ -66,9 +67,9 @@ public class TaskController {
         return toUpdate != null ? ResponseEntity.ok(toUpdate) : ResponseEntity.notFound().build();
     }
 
-    @PatchMapping("/{topic}/{id}/{field}/{value}")
-    public ResponseEntity<BaseTask> updateTaskField(@PathVariable String topic, @PathVariable long id, @PathVariable String field, @PathVariable String value){
-        BaseTask toUpdate = taskService.updateTaskField(topic, id, field, value);
+    @PatchMapping("/{topic}/{id}")
+    public ResponseEntity<BaseTask> patchUpdateTask(@PathVariable String topic, @PathVariable long id,@RequestBody TaskPatchRequest req){
+        BaseTask toUpdate = taskService.updateTaskOptional(topic, id, req);
         return toUpdate != null ? ResponseEntity.ok(toUpdate) : ResponseEntity.notFound().build();
     }
 }

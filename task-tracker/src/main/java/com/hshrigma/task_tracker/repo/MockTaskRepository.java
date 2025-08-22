@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import com.hshrigma.task_tracker.dto.TaskPatchRequest;
 import com.hshrigma.task_tracker.entity.BaseTask;
 import com.hshrigma.task_tracker.entity.Task;
 
@@ -77,7 +78,7 @@ public class MockTaskRepository implements TaskRepository {
     }
 
     // Helper
-    private BaseTask findTaskForTopicAndId(String topic, long id){
+    private BaseTask findTaskForTopicAndId(String topic, long id) {
         if (!tasks.containsKey(topic))
             return null;
 
@@ -90,50 +91,44 @@ public class MockTaskRepository implements TaskRepository {
         }
         return res;
     }
-    
+
     @Override
     public BaseTask deleteTask(String topic, long id) {
         BaseTask toRemove = findTaskForTopicAndId(topic, id);
+        if (toRemove == null)
+            return null;
 
-        if (toRemove != null) {
-            tasks.get(topic).remove(toRemove);
-        }
+        tasks.get(topic).remove(toRemove);
         return toRemove;
     }
 
     @Override
-    public BaseTask updateTask(String topic, long id, String name, String description, Boolean completed){
+    public BaseTask updateEntireTask(String topic, long id, String name, String description, Boolean completed) {
         BaseTask toUpdate = findTaskForTopicAndId(topic, id);
-        if(toUpdate != null){
-            toUpdate.resetTask(name, description, completed);
-        }
+        if (toUpdate == null)
+            return null;
+
+        toUpdate.resetTask(name, description, completed);
         return toUpdate;
     }
 
     @Override
-    public BaseTask updateTaskName(String topic, long id, String name) {
+    public BaseTask updateOptionalTask(String topic, long id, TaskPatchRequest updates) {
         BaseTask toUpdate = findTaskForTopicAndId(topic, id);
-        if(toUpdate != null){
-            toUpdate.setName(name);
+        if (toUpdate == null){
+            return null;
         }
-        return toUpdate;
-    }
 
-    @Override
-    public BaseTask updateTaskDescription(String topic, long id, String description) {
-        BaseTask toUpdate = findTaskForTopicAndId(topic, id);
-        if(toUpdate != null){
-            toUpdate.setDescription(description);
+        if (updates.name.isPresent()) {
+            toUpdate.setName(updates.name.get());
         }
-        return toUpdate;
-    }
+        if (updates.description.isPresent()) {
+            toUpdate.setDescription(updates.description.get());
+        }
+        if (updates.completed.isPresent()) {
+            toUpdate.setCompleted(updates.completed.get());
+        }
 
-    @Override
-    public BaseTask updateTaskCompletion(String topic, long id, Boolean completed) {
-        BaseTask toUpdate = findTaskForTopicAndId(topic, id);
-        if(toUpdate != null){
-            toUpdate.setCompleted(completed);
-        }
         return toUpdate;
     }
 }
