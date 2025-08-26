@@ -1,21 +1,16 @@
+
 package com.hshrigma.task_tracker.controller;
 
 import com.hshrigma.task_tracker.dto.TaskCreateRequest;
 import com.hshrigma.task_tracker.dto.TaskPatchRequest;
 import com.hshrigma.task_tracker.dto.TaskUpdateRequest;
-import com.hshrigma.task_tracker.entity.BaseTask;
+import com.hshrigma.task_tracker.entity.Task;
 import com.hshrigma.task_tracker.service.TaskService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
 
 @RestController
 @RequestMapping("/api/tasks")
@@ -26,50 +21,54 @@ public class TaskController {
         this.taskService = taskService;
     }
 
+    // GET all
     @GetMapping
-    public ResponseEntity<Map<String, List<BaseTask>>> getAllTasks() {
-        return ResponseEntity.ok(taskService.getMockTasks());
+    public ResponseEntity<List<Task>> getAllTasks() {
+        return ResponseEntity.ok(taskService.getAll());
     }
 
-    @GetMapping("/{topic}")
-    public ResponseEntity<List<BaseTask>> getTasksByTopic(@PathVariable String topic) {
-        List<BaseTask> tasks = taskService.getTasksByTopic(topic);
-        return tasks != null ? ResponseEntity.ok(tasks) : ResponseEntity.notFound().build();
+    // GET by topic
+    @GetMapping("/topic/{topic}")
+    public ResponseEntity<List<Task>> getTasksByTopic(@PathVariable String topic) {
+        return ResponseEntity.ok(taskService.getByTopic(topic));
     }
 
-    @GetMapping("/{topic}/{id}")
-    public ResponseEntity<BaseTask> getTaskById(
-            @PathVariable String topic,
-            @PathVariable long id) {
-        BaseTask task = taskService.getTaskById(id, topic);
-        return task != null ? ResponseEntity.ok(task) : ResponseEntity.notFound().build();
+    // GET by id
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        return taskService.getTaskById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping()
-    public ResponseEntity<BaseTask> createTask(@RequestBody TaskCreateRequest req) {
-        BaseTask createdTask = taskService.createTask(req.getTopic(), req.getName(), req.getDescription());
-
-        return createdTask != null
-                ? ResponseEntity.created(URI.create("/api/tasks/" + req.getTopic() + "/" + createdTask.getId()))
-                                .body(createdTask)
-                : ResponseEntity.noContent().build();
+    // POST
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody TaskCreateRequest req) {
+        Task createdTask = taskService.createTask(req.toEntity());
+        return ResponseEntity.created(URI.create("/api/tasks/" + createdTask.getId()))
+                .body(createdTask);
     }
 
-    @DeleteMapping("/{topic}/{id}")
-    public ResponseEntity<BaseTask> deleteTask(@PathVariable String topic, @PathVariable long id) {
-        BaseTask toRemove = taskService.deleteTask(topic, id);
-        return toRemove != null ? ResponseEntity.ok(toRemove) : ResponseEntity.notFound().build();
+    // DELETE
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{topic}/{id}")
-    public ResponseEntity<BaseTask> updateTask(@PathVariable String topic, @PathVariable long id, @RequestBody TaskUpdateRequest req) {
-        BaseTask toUpdate = taskService.updateTask(topic, id, req.getName(), req.getDescription(), req.getCompleted());
-        return toUpdate != null ? ResponseEntity.ok(toUpdate) : ResponseEntity.notFound().build();
+    // PUT
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody TaskUpdateRequest req) {
+        return taskService.updateEntireTask(id, req)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @PatchMapping("/{topic}/{id}")
-    public ResponseEntity<BaseTask> patchUpdateTask(@PathVariable String topic, @PathVariable long id,@RequestBody TaskPatchRequest req){
-        BaseTask toUpdate = taskService.updateTaskOptional(topic, id, req);
-        return toUpdate != null ? ResponseEntity.ok(toUpdate) : ResponseEntity.notFound().build();
+    // PATCH
+    @PatchMapping("/{id}")
+    public ResponseEntity<Task> patchUpdateTask(@PathVariable Long id, @RequestBody TaskPatchRequest req) {
+        return taskService.updateOptionalTask(id, req)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 }

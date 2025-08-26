@@ -1,47 +1,64 @@
+
 package com.hshrigma.task_tracker.service;
 
-import java.util.List;
-import java.util.Map;
-
+import com.hshrigma.task_tracker.dto.TaskPatchRequest;
+import com.hshrigma.task_tracker.dto.TaskUpdateRequest;
+import com.hshrigma.task_tracker.entity.Task;
+import com.hshrigma.task_tracker.repo.TaskRepository;
 import org.springframework.stereotype.Service;
 
-import com.hshrigma.task_tracker.dto.TaskPatchRequest;
-import com.hshrigma.task_tracker.entity.BaseTask;
-import com.hshrigma.task_tracker.repo.TaskRepository;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
-    private final TaskRepository taskRepo;
 
-    public TaskService(TaskRepository taskRepo) {
-        this.taskRepo = taskRepo;
+    private final TaskRepository repo;
+
+    public TaskService(TaskRepository repo) {
+        this.repo = repo;
     }
 
-    public Map<String, List<BaseTask>> getMockTasks() {
-        return taskRepo.getAll();
+    // Read
+    public Optional<Task> getTaskById(Long id) {
+        return repo.findById(id);
     }
 
-    public List<BaseTask> getTasksByTopic(String topic) {
-        return taskRepo.getByTopic(topic);
+    public List<Task> getByTopic(String topic) {
+        return repo.findByTopic(topic);
     }
 
-    public BaseTask getTaskById( long id, String topic) {
-        return taskRepo.getTaskById(id, topic);
+    public List<Task> getAll() {
+        return repo.findAll();
     }
 
-    public BaseTask createTask(String topic, String name, String description){
-        return taskRepo.createTask(topic, name, description);
+    // Create
+    public Task createTask(Task task) {
+        return repo.save(task);
     }
 
-    public BaseTask deleteTask(String topic, long id){
-        return taskRepo.deleteTask(topic, id);
+    // Delete
+    public void deleteTask(Long id) {
+        repo.deleteById(id);
     }
 
-    public BaseTask updateTask(String topic, long id, String name, String description, Boolean completed){
-        return taskRepo.updateEntireTask(topic, id, name, description, completed);
+    // Update (PUT)
+    public Optional<Task> updateEntireTask(Long id, TaskUpdateRequest req) {
+        return repo.findById(id).map(task -> {
+            task.setName(req.getName());
+            task.setDescription(req.getDescription());
+            task.setCompleted(req.getCompleted());
+            return repo.save(task);
+        });
     }
 
-    public BaseTask updateTaskOptional(String topic, long id, TaskPatchRequest updates){
-        return taskRepo.updateOptionalTask(topic, id, updates);
+    // Update (PATCH)
+    public Optional<Task> updateOptionalTask(Long id, TaskPatchRequest updates) {
+        return repo.findById(id).map(task -> {
+            updates.getName().ifPresent(task::setName);
+            updates.getDescription().ifPresent(task::setDescription);
+            updates.getCompleted().ifPresent(task::setCompleted);
+            return repo.save(task);
+        });
     }
 }
